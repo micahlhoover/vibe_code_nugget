@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://caxpqdqckvpyy"]
+
+[ext_resource type="Script" uid="uid://1jtus8ljgjqh" path="res://Obstacle.gd" id="1_4n2b1"]
+[ext_resource type="Texture2D" uid="uid://ca7qc3o1uqcwt" path="res://assets/side_barrel1.png" id="2_vcivv"]
+[ext_resource type="Texture2D" uid="uid://c3btg1fh05crx" path="res://assets/side_barrel2.png" id="3_tyhon"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vdbv7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vcivv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_tyhon")
+}],
+"loop": true,
+"name": &"default",
+"speed": 3.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8q3d2"]
+size = Vector2(48, 48)
+
+[node name="Obstacle" type="Area2D"]
+z_index = 1
+script = ExtResource("1_4n2b1")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_vdbv7")
+autoplay = "default"
+frame_progress = 0.548762
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_8q3d2")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

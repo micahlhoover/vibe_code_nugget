@@ -1,0 +1,181 @@
+[gd_scene load_steps=18 format=3 uid="uid://c6g7h8kgyq1w4"]
+
+[ext_resource type="Script" uid="uid://bdn686k27yk1a" path="res://Main.gd" id="1_16n2m"]
+[ext_resource type="Script" uid="uid://cfvje3gf50ovt" path="res://Player.gd" id="2_5l8b3"]
+[ext_resource type="Script" uid="uid://ddndpq4gt1f5c" path="res://RoadManager.gd" id="3_c1l8k"]
+[ext_resource type="Texture2D" uid="uid://ymwro1jhmjwn" path="res://assets/roadway.png" id="4_6d83y"]
+[ext_resource type="Texture2D" uid="uid://cthc5tpbxr1t6" path="res://assets/nugget_run1.png" id="5_5wjjm"]
+[ext_resource type="Texture2D" uid="uid://dfujxenc4wjlj" path="res://assets/nugget_run2.png" id="6_a7chv"]
+[ext_resource type="Texture2D" uid="uid://da5gjpgiyt86u" path="res://assets/nugget_run3.png" id="7_s8p8r"]
+[ext_resource type="Texture2D" uid="uid://cld4806fmx5v4" path="res://assets/nugget_run4.png" id="8_v0p6a"]
+[ext_resource type="Texture2D" uid="uid://xg13y1v7ta0s" path="res://assets/nugget_down.png" id="9_1f8lq"]
+[ext_resource type="Script" uid="uid://dhu0tupuqq70h" path="res://LamppostManager.gd" id="10_mpoig"]
+[ext_resource type="Script" uid="uid://dr8w0shuxwe5i" path="res://Camera.gd" id="11_hwbk2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(2048, 20)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2l1wk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_1f8lq")
+}],
+"loop": false,
+"name": &"dead",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_5wjjm")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_5wjjm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_a7chv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_s8p8r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_v0p6a")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8q3d2"]
+size = Vector2(38, 52)
+
+[sub_resource type="Theme" id="Theme_qfdeo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_t58aq"]
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+outline_size = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_23qj6"]
+font_size = 64
+font_color = Color(0.85098, 0.188235, 0.156863, 1)
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_16n2m")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(350, 350)
+script = ExtResource("11_hwbk2")
+
+[node name="RoadManager" type="Node2D" parent="."]
+script = ExtResource("3_c1l8k")
+
+[node name="RoadSprite1" type="Sprite2D" parent="RoadManager"]
+z_index = -1
+texture_filter = 1
+position = Vector2(0, 536)
+texture = ExtResource("4_6d83y")
+centered = false
+
+[node name="RoadSprite2" type="Sprite2D" parent="RoadManager"]
+z_index = -1
+texture_filter = 1
+position = Vector2(1024, 536)
+texture = ExtResource("4_6d83y")
+centered = false
+
+[node name="LamppostManager" type="Node2D" parent="."]
+script = ExtResource("10_mpoig")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(512, 540)
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="Nugget" type="CharacterBody2D" parent="."]
+position = Vector2(200, 500)
+script = ExtResource("2_5l8b3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Nugget"]
+sprite_frames = SubResource("SpriteFrames_2l1wk")
+animation = &"run"
+autoplay = "run"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Nugget"]
+position = Vector2(-2, 2)
+shape = SubResource("RectangleShape2D_8q3d2")
+
+[node name="ObstacleSpawner" type="Timer" parent="."]
+wait_time = 2.5
+autostart = true
+
+[node name="Obstacles" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 266.0
+offset_bottom = 57.0
+theme = SubResource("Theme_qfdeo")
+text = "Score: 0"
+label_settings = SubResource("LabelSettings_t58aq")
+
+[node name="GameOverUI" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="GameOverUI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.498039)
+
+[node name="GameOverLabel" type="Label" parent="GameOverUI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -54.0
+offset_right = 350.0
+offset_bottom = 54.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(350, 54)
+text = "YOU NUGGETED"
+label_settings = SubResource("LabelSettings_23qj6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartLabel" type="Label" parent="GameOverUI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = -75.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Click or Press Space to Restart"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
