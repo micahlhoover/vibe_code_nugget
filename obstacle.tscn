@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://caxpqdqckvpyy"]
 
 [ext_resource type="Script" uid="uid://1jtus8ljgjqh" path="res://Obstacle.gd" id="1_4n2b1"]
-[ext_resource type="Texture2D" uid="uid://ca7qc3o1uqcwt" path="res://assets/side_barrel1.png" id="2_vcivv"]
-[ext_resource type="Texture2D" uid="uid://c3btg1fh05crx" path="res://assets/side_barrel2.png" id="3_tyhon"]
+[ext_resource type="Texture2D" uid="uid://bxieyal8j0ubo" path="res://assets/barrel3.png" id="2_vcivv"]
+[ext_resource type="Texture2D" uid="uid://kxlo621t7rh3" path="res://assets/barrel4.png" id="3_tyhon"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vdbv7"]
 animations = [{

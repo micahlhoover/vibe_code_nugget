@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal hit
+signal jumped
 
 const JUMP_VELOCITY = -400.0
 const GRAVITY = 980.0
@@ -27,6 +28,7 @@ func _physics_process(delta):
 	if is_on_floor() and (Input.is_action_just_pressed("ui_accept")):
 		velocity.y = JUMP_VELOCITY
 		animated_sprite.play("jump") # Use single-frame jump animation
+		emit_signal("jumped")
 
 	move_and_slide()
 	global_position.x = 200

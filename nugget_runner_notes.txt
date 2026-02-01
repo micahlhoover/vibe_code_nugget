@@ -1,0 +1,59 @@
+TODO :
+	score
+	sound effects
+	music
+	roads closer together
+	improved barrel resources
+
+
+Look at the sprints in the ./resources folder.
+Create a godot based game where the road.png file moves along and the nugget_run1.png, nugget_run2.png, nugget_run3.png, and nugget_run4.png files are alternated as sprite resources to animate a chicken nugget running down the road. Every so often a new tile of road appears under the next piece of road before it moves out of the display area. Also the lamppost.png pieces move slowly by in the background to create a parallax effect. Finally side_barrel1.png and side_barrel2.png make an animated sprite for the player to jump over when they press space or mouse click. When the jump begins, the chicken nugget player sprite freezes into nugget_run1.png until they hit the ground again. Also they go up in the air and fall back down, with normal gravity pacing. Also there is collision detection, so if the player hits the barrel the sprite changes to nugget_down.png and the screen displays a pixelated "you nuggeted" in red pixelated text. When the player clicks or hits space, then everything restarts and the chicken nugget is running again.
+
+	run like this :
+		gemini --approval-mode auto_edit
+		not this : 
+			gemini --sandbox
+
+
+
+**Godot 4.3+ 2D Endless Runner: "Nugget Run" – Complete playable scene/project.**
+
+**Assets (all PNGs imported as Texture2D, pixel-perfect, no filtering):**
+- ./resources/road.png: Tiled road segment (e.g., 1024x256px).
+- ./resources/nugget_run1.png, nugget_run2.png, nugget_run3.png, nugget_run4.png: Chicken nugget run cycle frames.
+- ./resources/lamppost.png: Single lamppost for parallax.
+- ./resources/side_barrel1.png, side_barrel2.png: Barrel obstacle animation frames.
+- ./resources/nugget_down.png: Sad nugget fail sprite.
+
+**Core Mechanics (CharacterBody2D physics, 60 FPS, screen size 1024x600):**
+1. **Road (foreground, speed 300px/s right-to-left):** Use ParallaxBackground > ParallaxLayer (motion_scale=Vector2(1,1)) with two Sprite2D (road.png, tiled via region/stretch). Infinite loop: Reset position when off-screen left.
+2. **Player (CharacterBody2D "Nugget", fixed X=200, ground Y=500):**
+   - AnimatedSprite2D: "run" anim loops nugget_run1-4 (speed 10 FPS).
+   - CollisionShape2D: Rectangle matching sprite.
+   - Gravity: 980px/s². Jump: Space/mouse= -400 velocity Y (only if is_on_floor).
+   - Jump: Freeze to nugget_run1.png (stop anim), arc up/down naturally.
+3. **Parallax BG (ParallaxLayer motion_scale=Vector2(0.5,0.5)):** Multiple Sprite2D(lamppost.png) spawn off-right, move slowly left, reset when off-left.
+4. **Obstacles:** Every 2-3s, spawn Area2D+CollisionShape2D+AnimatedSprite2D(side_barrel1-2 loop) at random Y(400-520), speed 300px/s left. Object pool 5-10 for perf.
+5. **Collision:** Player body_entered on barrel → game over.
+6. **Game Over:** Swap player to nugget_down.png. CanvasLayer > ColorRect (semi-black overlay) + Label ("YOU NUGGETED" – use BitmapFont (generate from pixel chars) or ThemeOverride (small pixel font, red, center screen, scale 4x).
+7. **Restart:** Space/mouse click → reset all positions/velocities/anims, hide overlay.
+8. **Extras:** Camera2D follows player Y (limits). Score? Distance (label top-left). No audio/UI polish needed.
+
+**Output Format:**
+- Full main.tscn scene (nodes hierarchy, exact positions/sizes/scripts attached).
+- All GDScript files (Player.gd, Road.gd, Obstacle.gd, BarrelAnim.gd, Main.gd singleton for spawning/timer).
+- Step-by-step: "1. Create new 2D project. 2. Import assets to res://assets/. 3. Build scene..."
+- Use signals (body_entered), timers, _physics_process, _input.
+- Efficient: No instantiates every frame. Testable in editor.
+
+Make it run out-of-box. Fix common bugs (jump spam, tiling seams, collision misses).
+
+
+
+
+Player position set to: (200.0, 501.9991)
+   At: res://Player.gd:17:_physics_process()
+Player: (200.0, 501.9991) Z:0 Sprite Z:0
+   At: res://Player.gd:32:_physics_process()
+Player position set to: (200.0, 501.9991)
+   At: res://Player.gd:17:_physics_process()
