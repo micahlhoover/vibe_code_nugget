@@ -1,0 +1,28 @@
+# Godot 4+ specific ignores
+.godot/
+*.vcxproj
+*.unityproj
+*.pidb
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.rej
+*.orig
+.pvs-studio*
+.nomedia
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+export_credentials.cfg
+
+# Godot editor data (in .godot/ which is already ignored)
+# But safe to be explicit for subfolders if needed
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
