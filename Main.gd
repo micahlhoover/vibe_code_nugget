@@ -19,9 +19,13 @@ var game_active = false
 # Audio resources
 const SFX_JUMP = preload("res://assets/coin-collect-retro-8-bit-sound-effect-145251.mp3")
 const MUSIC_MAIN = preload("res://assets/game-8-bit-399898.mp3")
+const BG_TEX = preload("res://assets/background.png")
 
 var sfx_player: AudioStreamPlayer
 var music_player: AudioStreamPlayer
+var bg_sprite: Sprite2D
+var bg_color_sprite: Sprite2D
+var _last_viewport_size := Vector2.ZERO
 
 func _ready():
 	# This node needs to process input even when paused to handle restarts.
@@ -51,15 +55,68 @@ func _ready():
 	music_player.name = "MusicPlayer"
 	music_player.stream = MUSIC_MAIN
 	add_child(music_player)
+
+	# Create a 1x1 white texture to use for the solid background color
+	var img := Image.new()
+	img.create(1, 1, false, Image.FORMAT_RGBA8)
+	img.set_pixel(0, 0, Color(1, 1, 1, 1))
+	var color_tex := ImageTexture.create_from_image(img)
+
+	bg_color_sprite = Sprite2D.new()
+	bg_color_sprite.name = "BackgroundColor"
+	bg_color_sprite.texture = color_tex
+	bg_color_sprite.modulate = Color8(0x37, 0x8e, 0xb5)
+	bg_color_sprite.z_index = -200
+	add_child(bg_color_sprite)
+
+	# Create background image sprite above the color background
+	bg_sprite = Sprite2D.new()
+	bg_sprite.name = "Background"
+	bg_sprite.texture = BG_TEX
+	bg_sprite.z_index = -100
+	add_child(bg_sprite)
+
+	# Initial sizing/position
+	_update_background()
 	start_game()
 
 func _process(delta):
+	# Keep background sized to the viewport if the window resizes
+	var vs = get_viewport_rect().size
+	if vs != _last_viewport_size:
+		_update_background()
+
+	# Update gameplay (score) only when active
 	if not game_active:
 		return
-		
+
 	# Update score based on distance
 	score += int(ROAD_SPEED * delta / 10)
 	score_label.text = "Score: " + str(score)
+
+
+func _update_background():
+	if not bg_sprite or not bg_sprite.texture:
+		return
+	var vs = get_viewport_rect().size
+	_last_viewport_size = vs
+	var tex_size = bg_sprite.texture.get_size()
+	if tex_size.x == 0 or tex_size.y == 0:
+		return
+	# Scale to cover the viewport while preserving aspect ratio
+	#var sx = vs.x / tex_size.x
+	#var sy = vs.y / tex_size.y
+	#var s = max(sx, sy)
+	#bg_sprite.scale = Vector2(s, s)
+	# Center the background image sprite
+	bg_sprite.position = vs * 0.5
+	bg_sprite.position.x = 0
+	bg_sprite.scale = Vector2(2,2)
+
+	# Resize and position the solid color sprite to cover the viewport
+	#bg_color_sprite.scale = Vector2(vs.x * 4, vs.y)
+	#bg_color_sprite.position = vs * 0.5
+
 
 func _input(event):
 	# Listen for restart action only when the game is over and paused.

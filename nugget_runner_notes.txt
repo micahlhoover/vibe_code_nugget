@@ -1,9 +1,14 @@
 TODO :
 	score
+		sort of works
 	sound effects
+		done
 	music
+		done
 	roads closer together
+		done
 	improved barrel resources
+		done
 
 
 Look at the sprints in the ./resources folder.
